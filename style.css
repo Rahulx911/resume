@@ -252,6 +252,20 @@ section {
   transform: translateY(0);
 }
 
+/* ── Hero CSS entrance (no JS dependency) ── */
+.hero-anim {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: heroEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: var(--delay, 0s);
+}
+@keyframes heroEntrance {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* ══════════ HERO ══════════ */
 #hero {
   min-height: 100vh;
