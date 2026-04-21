@@ -171,18 +171,38 @@ function closeMobile() {
 // ── Scroll Reveal ──
 (function initReveal() {
   const reveals = document.querySelectorAll('.reveal');
+  let revealDelay = 0;
+
   const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => {
+    entries.forEach((entry) => {
       if (entry.isIntersecting) {
+        const delay = revealDelay;
+        revealDelay += 100;
         setTimeout(() => {
           entry.target.classList.add('visible');
-        }, i * 80);
+        }, delay);
         observer.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    // Reset delay counter after each batch
+    setTimeout(() => { revealDelay = 0; }, 50);
+  }, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
 
-  reveals.forEach(el => observer.observe(el));
+  // Wait for DOM to be fully ready, then observe
+  if (document.readyState === 'complete') {
+    reveals.forEach(el => observer.observe(el));
+  } else {
+    window.addEventListener('load', () => {
+      reveals.forEach(el => observer.observe(el));
+    });
+  }
+
+  // Safety fallback: if anything is still hidden after 3s, force show
+  setTimeout(() => {
+    document.querySelectorAll('.reveal:not(.visible)').forEach(el => {
+      el.classList.add('visible');
+    });
+  }, 3000);
 })();
 
 // ── Counter Animation ──
